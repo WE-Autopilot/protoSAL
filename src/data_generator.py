@@ -22,7 +22,7 @@ def generate_path_vector(num_steps=4, image_size=32, max_step=5, start_pt=None):
         x_min = -min(max_step, int(last_p[0]))
         x_max = min(max_step, image_size - 1 - int(last_p[0]))
         # find min and max to stay within image
-        y_min = 0
+        y_min = 1
         y_max = min(max_step, image_size - 1 - int(last_p[1]))
 
         # break out of loop 
