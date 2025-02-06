@@ -2,7 +2,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 class CNNModel(nn.Module):
-    def __init__(self, num_points=10):
+    def __init__(self, num_points=4):
         super(CNNModel, self).__init__()
         self.num_points = num_points
 
@@ -37,5 +37,5 @@ class CNNModel(nn.Module):
         x = self.fc4(x)
 
         # Reshape the final output to (batch_size, num_points, 2)
-        return x.view(x.size(0), self.num_points, 2)
+        return x
 

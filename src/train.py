@@ -5,6 +5,7 @@ from torch.utils.data import DataLoader, Dataset, random_split
 import torchvision.transforms as transforms
 import h5py
 import numpy as np
+from CNNModel import CNNModel
 
 # define dataset class to handle loading and preprocessing data from an hdf5 file
 class rcDataset(Dataset):
@@ -15,7 +16,7 @@ class rcDataset(Dataset):
         # load data from the hdf5 file
         with h5py.File(h5_file, 'r') as file:
             self.images = file['images'][:]  # assuming images are stored in 'images'
-            self.labels = file['labels'][:]  # assuming labels are stored in 'labels'
+            self.labels = file['paths'][:]  # assuming labels are stored in 'labels'
 
     def __len__(self):
         # return the number of samples in the dataset
@@ -33,7 +34,7 @@ class rcDataset(Dataset):
         return image, label
 
 # data preparation
-h5_file = 'path/to/file.h5'  # add the actual path to hdf5 file (I don't have the dataset)
+h5_file = 'paths.h5'  # add the actual path to hdf5 file (I don't have the dataset)
 
 # define transformations for preprocessing the data
 transform = transforms.Compose([
@@ -75,30 +76,23 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, epochs=10
         # validation phase
         model.eval()  # set the model to evaluation mode
         val_loss = 0.0
-        correct = 0
-        total = 0
 
         with torch.no_grad():  # disable gradient computation for validation
-            for images, labels in val_loader:
-                images, labels = images.to(device), labels.to(device)
-                outputs = model(images)  # foward pass: compute predictions
-                loss = criterion(outputs, labels)  # compute loss
-                val_loss += loss.item()  # accumulate validation loss
+                for images, labels in val_loader:
+                    images, labels = images.to(device), labels.to(device)
+                    outputs = model(images)  # foward pass: compute predictions
+                    loss = criterion(outputs, labels)  # compute loss
+                    val_loss += loss.item()  # accumulate validation loss
 
-                _, predicted = torch.max(outputs, 1)  # get predicted class
-                total += labels.size(0)  # total number of samples
-                correct += (predicted == labels).sum().item()  # count correct predictions
-
-        # print training and validation statistics for the current epoch
+            # print training and validation statistics for the current epoch
         print(f"Epoch {epoch+1}/{epochs}, "
-              f"Train Loss: {train_loss/len(train_loader):.4f}, "
-              f"Val Loss: {val_loss/len(val_loader):.4f}, "
-              f"Val Accuracy: {100 * correct / total:.2f}%")
+            f"Train Loss: {train_loss/len(train_loader):.4f}, "
+            f"Val Loss: {val_loss/len(val_loader):.4f}, ")
 
 # define the model, loss function, and optimizer
 # Omar or Justin, replace `YourModel` with the actual model class name (maybe call is CNNmodel)
-model = YourModel()
-criterion = nn.CrossEntropyLoss()  # loss function for classification tasks
+model = CNNModel()
+criterion = nn.MSELoss()  # loss function for classification tasks
 optimizer = optim.Adam(model.parameters(), lr=0.001)  # Adam optimizer with learning rate 0.001
 
 # move the model to the selected device
