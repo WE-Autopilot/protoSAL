@@ -9,6 +9,8 @@ class CNNModel(nn.Module):
         # Convolutional layers
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3, stride=1, padding=1)
         self.conv2 = nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3, stride=1, padding=1)
+        self.conv3 = nn.Conv2d(in_channels=64, out_channels=128, kernel_size=3, stride=1, padding=1)
+        self.conv4 = nn.Conv2d(in_channels=128, out_channels=256, kernel_size=3, stride=1, padding=1)
 
         # Mean pooling layer
         self.mean_pool = nn.AvgPool2d(kernel_size=2, stride=2)
