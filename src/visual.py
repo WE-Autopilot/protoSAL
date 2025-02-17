@@ -11,8 +11,8 @@ model.load_state_dict(state_dict)
 
 # Load dataset
 f = hp.File("paths.h5")
-imgs = f["images"][:500]
-paths = f["paths"][:500]
+imgs = f["images"][:]
+paths = f["paths"][:]
 
 # Reshape images to match model input
 imgs = np.expand_dims(imgs, 1)
@@ -31,5 +31,9 @@ print("Mean Absolute Error:", mean_abs_error.item())
 while 1:
     i = int(input("id: "))
 
-# Visualize path
-visualize_path(torch.tensor(imgs[10, 0]), y1.detach())
+    # Process first prediction
+    y1 = torch.cat((torch.tensor([0, 0]), y[i])).reshape(-1, 2)
+    y1 = torch.cumsum(y1, axis=0)
+
+    # Visualize path
+    visualize_path(torch.tensor(imgs[i, 0]), y1.detach())
