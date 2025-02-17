@@ -38,8 +38,11 @@ h5_file = 'paths.h5'  # add the actual path to hdf5 file (I don't have the datas
 
 # define transformations for preprocessing the data
 transform = transforms.Compose([
-    transforms.ToTensor(),  # convert images to PyTorch tensors
-    transforms.Normalize((0.5,), (0.5,))  # normalize pixel values to range [-1, 1]
+    transforms.ToTensor(),
+    transforms.Normalize((0.5,), (0.5,)),  
+    transforms.RandomHorizontalFlip(),  # Randomly flip images
+    transforms.RandomRotation(10),  # Rotate images slightly
+    transforms.RandomAffine(degrees=0, translate=(0.1, 0.1)),  # Small translations
 ])
 
 # create dataset and split into training and validation sets
@@ -92,8 +95,8 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, epochs=10
 # define the model, loss function, and optimizer
 # Omar or Justin, replace `YourModel` with the actual model class name (maybe call is CNNmodel)
 model = CNNModel()
-criterion = nn.MSELoss()  # loss function for classification tasks
-optimizer = optim.Adam(model.parameters(), lr=0.001)  # Adam optimizer with learning rate 0.001
+criterion = nn.SmoothL1Loss()
+optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)  # Adam optimizer with learning rate 0.001
 
 # move the model to the selected device
 model.to(device)

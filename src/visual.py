@@ -34,4 +34,4 @@ for i in range(1, 4):
     y1[i] += y1[i - 1]
 
 # Visualize path
-visualize_path(torch.tensor(imgs[10, 0]), y.detach())
+visualize_path(torch.tensor(imgs[10, 0]), y1.detach())

@@ -99,7 +99,7 @@ def create_dataset_h5(filename='paths.h5', num_samples=100, image_size=32):
 
 def main():
     # generate sample path and its points
-    pv, pts = generate_path_vector(num_steps=4, image_size=32, max_step=5)
+    pv, pts = generate_path_vector(num_steps=4, image_size=32, max_step=10)
     # print path vector and points on path 
     print("Sample path_vector (len=8):", pv)
     print("Points on path:", pts)
@@ -109,7 +109,7 @@ def main():
     # visualize path on image
     visualize_path(img, pts)
     # dataset with 100 samples
-    create_dataset_h5('paths.h5', num_samples=100, image_size=32)
+    create_dataset_h5('paths.h5', num_samples=10000, image_size=32)
 
 if __name__ == "__main__":
     main()
