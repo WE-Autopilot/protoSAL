@@ -104,7 +104,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)  # Adam 
 model.to(device)
 
 # start the training process
-train_model(model, train_loader, val_loader, criterion, optimizer, epochs=20)
+train_model(model, train_loader, val_loader, criterion, optimizer, epochs=100)
 
 # save the trained model to a file
 torch.save(model.state_dict(), 'model.pth')  # save the model weights
