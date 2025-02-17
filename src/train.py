@@ -52,8 +52,8 @@ val_size = len(dataset) - train_size  # remaining 20% for validation
 train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
 # create data loaders for batching and shuffling data
-train_loader = DataLoader(train_dataset, batch_size=32, shuffle=True)  # training data loader
-val_loader = DataLoader(val_dataset, batch_size=32, shuffle=False)  # validation data loader
+train_loader = DataLoader(train_dataset, batch_size=2048, shuffle=True)  # training data loader
+val_loader = DataLoader(val_dataset, batch_size=2048, shuffle=False)  # validation data loader
 
 # check if a GPU is available and set the device accordingly
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -84,6 +84,7 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, epochs=10
                 for images, labels in val_loader:
                     images, labels = images.to(device), labels.to(device)
                     outputs = model(images)  # foward pass: compute predictions
+                    # print(outputs)
                     loss = criterion(outputs, labels)  # compute loss
                     val_loss += loss.item()  # accumulate validation loss
 
@@ -102,7 +103,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)  # Adam 
 model.to(device)
 
 # start the training process
-train_model(model, train_loader, val_loader, criterion, optimizer, epochs=100)
+train_model(model, train_loader, val_loader, criterion, optimizer, epochs=50)
 
 # save the trained model to a file
 torch.save(model.state_dict(), 'model.pth')  # save the model weights

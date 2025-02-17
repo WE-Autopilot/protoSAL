@@ -89,12 +89,14 @@ def create_dataset_h5(filename='paths.h5', num_samples=100, image_size=32):
         # generate samples and store in dataset 
         for i in range(num_samples):
             # generate random path and points
-            pv, pts = generate_path_vector(num_steps=4, image_size=image_size, max_step=5)
+            pv, pts = generate_path_vector(num_steps=4, image_size=image_size, max_step=10)
             # convert points to binary image
             img = points_to_image(pts, image_size)
             # store image and path vector in image 
             dset_images[i] = img.numpy()
             dset_paths[i] = pv.numpy()
+            if i % 1000 == 0:
+                print("Sample #", i)
     print(f"Finished creating {num_samples} samples in {filename}.")
 
 def main():
