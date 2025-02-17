@@ -11,8 +11,8 @@ model.load_state_dict(state_dict)
 
 # Load dataset
 f = hp.File("paths.h5")
-imgs = f["images"][:]
-paths = f["paths"][:]
+imgs = f["images"][:1000]
+paths = f["paths"][:1000]
 
 # Reshape images to match model input
 imgs = np.expand_dims(imgs, 1)

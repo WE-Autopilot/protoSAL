@@ -39,10 +39,10 @@ h5_file = 'paths.h5'  # add the actual path to hdf5 file (I don't have the datas
 # define transformations for preprocessing the data
 transform = transforms.Compose([
     transforms.ToTensor(),
-    transforms.Normalize((0.5,), (0.5,)),  
-    transforms.RandomHorizontalFlip(),  # Randomly flip images
-    transforms.RandomRotation(10),  # Rotate images slightly
-    transforms.RandomAffine(degrees=0, translate=(0.1, 0.1)),  # Small translations
+    # transforms.Normalize((0.5,), (0.5,)),  
+    # transforms.RandomHorizontalFlip(),  # Randomly flip images
+    # transforms.RandomRotation(10),  # Rotate images slightly
+    # transforms.RandomAffine(degrees=0, translate=(0.1, 0.1)),  # Small translations
 ])
 
 # create dataset and split into training and validation sets
@@ -52,11 +52,12 @@ val_size = len(dataset) - train_size  # remaining 20% for validation
 train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
 # create data loaders for batching and shuffling data
-train_loader = DataLoader(train_dataset, batch_size=2048, shuffle=True)  # training data loader
-val_loader = DataLoader(val_dataset, batch_size=2048, shuffle=False)  # validation data loader
+train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True)  # training data loader
+val_loader = DataLoader(val_dataset, batch_size=128, shuffle=False)  # validation data loader
 
 # check if a GPU is available and set the device accordingly
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+print(f"Using device: {device}")
 
 # define the training loop
 def train_model(model, train_loader, val_loader, criterion, optimizer, epochs=10):
@@ -103,7 +104,7 @@ optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)  # Adam 
 model.to(device)
 
 # start the training process
-train_model(model, train_loader, val_loader, criterion, optimizer, epochs=50)
+train_model(model, train_loader, val_loader, criterion, optimizer, epochs=20)
 
 # save the trained model to a file
 torch.save(model.state_dict(), 'model.pth')  # save the model weights
