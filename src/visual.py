@@ -5,7 +5,7 @@ from CNNModel import CNNModel
 from dataset_generator import visualize_path
 
 # Load model
-model = CNNModel()
+model = CNNModel(num_points=4)
 state_dict = torch.load("model.pth")
 model.load_state_dict(state_dict)
 

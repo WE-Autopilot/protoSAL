@@ -52,8 +52,9 @@ val_size = len(dataset) - train_size  # remaining 20% for validation
 train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
 # create data loaders for batching and shuffling data
-train_loader = DataLoader(train_dataset, batch_size=128, shuffle=True)  # training data loader
-val_loader = DataLoader(val_dataset, batch_size=128, shuffle=False)  # validation data loader
+bs = 2048 #2 4 8 16 32 64 128 256 512 1024 2048 4096 8192 16384
+train_loader = DataLoader(train_dataset, batch_size=bs, shuffle=True)  # training data loader
+val_loader = DataLoader(val_dataset, batch_size=bs, shuffle=False)  # validation data loader
 
 # check if a GPU is available and set the device accordingly
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -90,21 +91,22 @@ def train_model(model, train_loader, val_loader, criterion, optimizer, epochs=10
                     val_loss += loss.item()  # accumulate validation loss
 
             # print training and validation statistics for the current epoch
-        print(f"Epoch {epoch+1}/{epochs}, "
-            f"Train Loss: {train_loss/len(train_loader):.4f}, "
-            f"Val Loss: {val_loss/len(val_loader):.4f}, ")
+        if epoch+1 % 10 == 0 or epoch == 0:
+            print(f"Epoch {epoch+1}/{epochs}, "
+                f"Train Loss: {train_loss/len(train_loader):.4f}, "
+                f"Val Loss: {val_loss/len(val_loader):.4f}, ")
 
 # define the model, loss function, and optimizer
 # Omar or Justin, replace `YourModel` with the actual model class name (maybe call is CNNmodel)
-model = CNNModel()
+model = CNNModel(num_points=4)
 criterion = nn.SmoothL1Loss()
-optimizer = optim.Adam(model.parameters(), lr=0.001, weight_decay=1e-4)  # Adam optimizer with learning rate 0.001
+optimizer = optim.Adam(model.parameters(), lr=1e-3, weight_decay=1e-5)  # Adam optimizer with learning rate 0.001
 
 # move the model to the selected device
 model.to(device)
 
 # start the training process
-train_model(model, train_loader, val_loader, criterion, optimizer, epochs=100)
+train_model(model, train_loader, val_loader, criterion, optimizer, epochs=1000)
 
 # save the trained model to a file
 torch.save(model.state_dict(), 'model.pth')  # save the model weights
